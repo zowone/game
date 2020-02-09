@@ -1,0 +1,461 @@
+{
+	"textures": [
+		{
+			"image": "phaserexport.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 1738,
+				"h": 457
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "player_walk_009.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 323,
+						"h": 150
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 323,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_010.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 324,
+						"h": 149
+					},
+					"frame": {
+						"x": 326,
+						"y": 1,
+						"w": 324,
+						"h": 149
+					}
+				},
+				{
+					"filename": "player_walk_011.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 0,
+						"w": 315,
+						"h": 149
+					},
+					"frame": {
+						"x": 1,
+						"y": 153,
+						"w": 315,
+						"h": 149
+					}
+				},
+				{
+					"filename": "player_walk_008.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 0,
+						"w": 309,
+						"h": 150
+					},
+					"frame": {
+						"x": 1,
+						"y": 304,
+						"w": 309,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_012.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 28,
+						"y": 0,
+						"w": 297,
+						"h": 149
+					},
+					"frame": {
+						"x": 652,
+						"y": 1,
+						"w": 297,
+						"h": 149
+					}
+				},
+				{
+					"filename": "player_walk_007.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 33,
+						"y": 0,
+						"w": 283,
+						"h": 150
+					},
+					"frame": {
+						"x": 951,
+						"y": 1,
+						"w": 283,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_013.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 44,
+						"y": 0,
+						"w": 281,
+						"h": 150
+					},
+					"frame": {
+						"x": 1236,
+						"y": 1,
+						"w": 281,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_003.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 74,
+						"y": 0,
+						"w": 218,
+						"h": 151
+					},
+					"frame": {
+						"x": 1519,
+						"y": 1,
+						"w": 218,
+						"h": 151
+					}
+				},
+				{
+					"filename": "player_walk_014.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 0,
+						"w": 258,
+						"h": 150
+					},
+					"frame": {
+						"x": 326,
+						"y": 152,
+						"w": 258,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_006.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 58,
+						"y": 0,
+						"w": 252,
+						"h": 149
+					},
+					"frame": {
+						"x": 586,
+						"y": 152,
+						"w": 252,
+						"h": 149
+					}
+				},
+				{
+					"filename": "player_walk_005.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 62,
+						"y": 0,
+						"w": 242,
+						"h": 150
+					},
+					"frame": {
+						"x": 312,
+						"y": 304,
+						"w": 242,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_015.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 76,
+						"y": 0,
+						"w": 234,
+						"h": 150
+					},
+					"frame": {
+						"x": 840,
+						"y": 153,
+						"w": 234,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_004.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 68,
+						"y": 0,
+						"w": 230,
+						"h": 151
+					},
+					"frame": {
+						"x": 1076,
+						"y": 153,
+						"w": 230,
+						"h": 151
+					}
+				},
+				{
+					"filename": "player_walk_017.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 85,
+						"y": 0,
+						"w": 208,
+						"h": 150
+					},
+					"frame": {
+						"x": 1308,
+						"y": 153,
+						"w": 208,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_016.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 84,
+						"y": 0,
+						"w": 214,
+						"h": 149
+					},
+					"frame": {
+						"x": 1518,
+						"y": 154,
+						"w": 214,
+						"h": 149
+					}
+				},
+				{
+					"filename": "player_walk_018.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 85,
+						"y": 0,
+						"w": 201,
+						"h": 150
+					},
+					"frame": {
+						"x": 556,
+						"y": 306,
+						"w": 201,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_001.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 83,
+						"y": 0,
+						"w": 193,
+						"h": 150
+					},
+					"frame": {
+						"x": 759,
+						"y": 306,
+						"w": 193,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_019.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 86,
+						"y": 0,
+						"w": 193,
+						"h": 150
+					},
+					"frame": {
+						"x": 954,
+						"y": 306,
+						"w": 193,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_020.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 86,
+						"y": 0,
+						"w": 191,
+						"h": 150
+					},
+					"frame": {
+						"x": 1149,
+						"y": 306,
+						"w": 191,
+						"h": 150
+					}
+				},
+				{
+					"filename": "player_walk_002.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 81,
+						"y": 0,
+						"w": 203,
+						"h": 149
+					},
+					"frame": {
+						"x": 1342,
+						"y": 305,
+						"w": 203,
+						"h": 149
+					}
+				},
+				{
+					"filename": "player_walk_000.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 325,
+						"h": 151
+					},
+					"spriteSourceSize": {
+						"x": 85,
+						"y": 0,
+						"w": 189,
+						"h": 150
+					},
+					"frame": {
+						"x": 1547,
+						"y": 305,
+						"w": 189,
+						"h": 150
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:f38c3ec5821a3fafe267825d7d6d0134:a0df7bb1b97e52740af73a68894ceb49:007208e977cceb92a780cdac547504ea$"
+	}
+}
