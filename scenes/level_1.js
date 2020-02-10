@@ -1,6 +1,8 @@
 class Level_1 extends Phaser.Scene {
     constructor() {
         super('Level_1');
+        this.isJump = false;
+        this.jumpPower = 0;
     };
 
     preload() {
@@ -36,9 +38,9 @@ class Level_1 extends Phaser.Scene {
                 suffix: '.png',
                 zeroPad: 3,
                 start:60,
-                end: 62
+                end: 62,
+                frames:[60,61,62,61]
             }),
-            loop:true,
             repeat: -1
         });
 
@@ -57,20 +59,19 @@ class Level_1 extends Phaser.Scene {
 
         this.anims.create({
             key: 'jump',
-            frameRate: 60,
+            frameRate: 30,
             frames: this.anims.generateFrameNames('player', {
                 prefix: 'player_',
                 suffix: '.png',
                 zeroPad: 3,
                 start:66,
-                end: 71
-            }),
-            loop:true,
-            repeat: -1
+                end: 71,
+                frames:[66,67,68,69,70,71,70,68,67,66]
+            })
         });
 
         this.anims.create({
-            key: 'prejump',
+            key: 'landing',
             frameRate: 60,
             frames: this.anims.generateFrameNames('player', {
                 prefix: 'player_',
@@ -78,9 +79,7 @@ class Level_1 extends Phaser.Scene {
                 zeroPad: 3,
                 start:60,
                 end: 65
-            }),
-            loop:true,
-            repeat: -1
+            })
         });
 
         this.anims.create({
@@ -94,6 +93,7 @@ class Level_1 extends Phaser.Scene {
             }),
             repeat: -1
         })
+// LEVEL
         // this.ground = this.physics.add.staticGroup();
         const level = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
         const map = this.make.tilemap({ data: level, tileWidth: 32, tileHeight: 32 });
@@ -101,8 +101,8 @@ class Level_1 extends Phaser.Scene {
         this.ground = map.createStaticLayer(0, tiles, 0, config.height - 32);
         this.ground.setCollision([0], true);
 
-
-        this.player = this.physics.add.sprite(500, config.height / 2, 'player', 0) .setSize(95, 145)
+// PLAYER
+        this.player = this.physics.add.sprite(500, config.height / 2, 'player', 0).setSize(95, 145)
         .setOffset(135, 35)       ;
         
         this.player.setScale(.8);
@@ -110,7 +110,11 @@ class Level_1 extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
 
         this.physics.add.collider(this.player, this.ground)
-
+        this.physics.world.on('collisionstart', function (event, bodyA, bodyB) {
+            console.log(event, bodyA, bodyB)
+            // var pairs = event.pairs;
+        });
+// SPACESHIP
 
         // this.player.play('left');
         this.mainSpaceship = this.add.sprite(32, 16, "spaceship", "spaceship.png");
@@ -118,33 +122,95 @@ class Level_1 extends Phaser.Scene {
         this.power.play('powerShip');
 
         this.spaceship__container = this.add.container(config.width, 100, [this.mainSpaceship, this.power]);
+       
         this.physics.world.enable(this.spaceship__container);
         this.spaceship__container.body.setVelocityX(-300).setBounce(1,1).setCollideWorldBounds(true).setSize(64, 32);
-        
-
+      
+// INPUT
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.spacebar = this.input.keyboard.addKey('SPACE');
+        this.spacebar.on('down',this._startJump,this);
+        this.spacebar.on('up',this._endJump,this);
+        // this.input.on('space', this._jump,this)
     }
 
     update() {
-        const cursors = this.input.keyboard.createCursorKeys();
-        console.log(cursors)
+        
         if(this.spaceship__container.body.velocity.x > 0){
-            this.spaceship__container.setScale(-1,1)
+            this.mainSpaceship.setScale(-1,1)
+            this.power.setScale(-1,1);
+            this.power.x = -15;
+            // this.spaceship__container.setScale(-1,1)
         }else{
-            this.spaceship__container.setScale(1,1)
+            // this.spaceship__container.setScale(1,1)
+            this.mainSpaceship.setScale(1,1);
+            this.power.setScale(1,1);
+            this.power.x = 79;
 
         }
-        if (cursors.left.isDown) {
-            this.player.body.setVelocityX(-160);
+
+        
+
+        if (this.cursors.left.isDown) {
+            this.player.body.setVelocityX(-200);
 
             this.player.anims.play('left', true);
-        }else if (cursors.right.isDown) {
-            this.player.body.setVelocityX(160);
+        }else if (this.cursors.right.isDown) {
+            this.player.body.setVelocityX(200);
 
             this.player.anims.play('right', true);
 
         }else {
             this.player.body.setVelocityX(0);
-            this.player.anims.play('pause', true);
+            if(!this.isJump){
+                this._stopAnimation(this.player.anims);
+            }
         }
+
+// console.log( this.player.body.position.y,this.player.anims.currentAnim)
+//         if(this.isJump && this.player.body.position.y === 620){
+//             this.isJump = false;
+//             this.player.anims.play('landing', true);                     
+//         }
+    }
+
+    _stopAnimation(animation){
+       
+        if(animation.isPlaying){
+            const totalFrames = animation.getTotalFrames();
+            const currentFrame = animation.currentFrame.index
+            if(currentFrame/totalFrames>0.5){
+                this.player.anims.stopOnRepeat()
+            }else{
+                this.player.anims.stop();
+                this.player.setFrame('player_059.png')
+            }
+        
+        }else{
+            this.player.setFrame('player_059.png')
+        }
+    }
+
+    _updateJumpPower(){
+        if(this.jumpPower < 2 ){
+            this.jumpPower +=  0.05;
+        }
+    }
+
+    _startJump(){
+        this.timer = this.time.addEvent({delay:10, callback: this._updateJumpPower, callbackScope: this, loop: true})        
+    }
+
+    _endJump(){
+        this.timer.remove();
+        if(this.player.body.velocity.y === 0){
+            this.isJump = true;
+            this.player.anims.play('jump', true);
+            function playerJump (){this.player.body.setVelocityY(-this.jumpPower*200);this.jumpPower = 0;}
+            this.time.delayedCall(120,playerJump,['salut'],this);
+        }else{
+            this.jumpPower = 0;
+        }
+        
     }
 }
