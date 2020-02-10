@@ -5,9 +5,11 @@ class Level_1 extends Phaser.Scene {
 
     preload() {
         this.load.image('ground', 'images/ground.png');
-        this.load.atlas('player', 'images/player/player.png', 'images/player/player.json');
+        this.load.image('physic_player', 'images/player/player_hitbox.png');
+        // this.load.atlas('player', 'images/player/player.png', 'images/player/player.json');
+        this.load.multiatlas('player', 'images/player/player.json', 'images/player');
         this.load.atlas('spaceship', 'images/space.png', 'images/space.json');
-        this.load.atlas('power', 'images/power.png', 'images/test.json');
+        this.load.atlas('power', 'images/power.png', 'images/power.json');
 
     }
 
@@ -17,12 +19,67 @@ class Level_1 extends Phaser.Scene {
             key: 'left',
             frameRate: 60,
             frames: this.anims.generateFrameNames('player', {
-                prefix: 'player_walk_',
+                prefix: 'player_',
                 suffix: '.png',
                 zeroPad: 3,
-                start: 1,
-                end: 20
+                start: 0,
+                end: 29
             }),
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'pause',
+            frameRate: 3,
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'player_',
+                suffix: '.png',
+                zeroPad: 3,
+                start:60,
+                end: 62
+            }),
+            loop:true,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
+            frameRate: 60,
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'player_',
+                suffix: '.png',
+                zeroPad: 3,
+                start: 30,
+                end: 59
+            }),
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'jump',
+            frameRate: 60,
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'player_',
+                suffix: '.png',
+                zeroPad: 3,
+                start:66,
+                end: 71
+            }),
+            loop:true,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'prejump',
+            frameRate: 60,
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'player_',
+                suffix: '.png',
+                zeroPad: 3,
+                start:60,
+                end: 65
+            }),
+            loop:true,
             repeat: -1
         });
 
@@ -45,7 +102,9 @@ class Level_1 extends Phaser.Scene {
         this.ground.setCollision([0], true);
 
 
-        this.player = this.physics.add.sprite(500, config.height / 2, 'player', 'player_walk_000.png');
+        this.player = this.physics.add.sprite(500, config.height / 2, 'player', 0) .setSize(95, 145)
+        .setOffset(135, 35)       ;
+        
         this.player.setScale(.8);
         this.player.setGravityY(300);
         this.player.setCollideWorldBounds(true);
@@ -54,13 +113,13 @@ class Level_1 extends Phaser.Scene {
 
 
         // this.player.play('left');
-        this.mainSpaceship = this.add.sprite(0, 0, "spaceship", "spaceship.png");
-        this.power = this.add.sprite(47, 5, "power");
+        this.mainSpaceship = this.add.sprite(32, 16, "spaceship", "spaceship.png");
+        this.power = this.add.sprite(79, 21, "power");
         this.power.play('powerShip');
 
         this.spaceship__container = this.add.container(config.width, 100, [this.mainSpaceship, this.power]);
         this.physics.world.enable(this.spaceship__container);
-        this.spaceship__container.body.setVelocityX(-300).setBounce(1, 1).setCollideWorldBounds(true);
+        this.spaceship__container.body.setVelocityX(-300).setBounce(1,1).setCollideWorldBounds(true).setSize(64, 32);
         
 
     }
@@ -78,10 +137,14 @@ class Level_1 extends Phaser.Scene {
             this.player.body.setVelocityX(-160);
 
             this.player.anims.play('left', true);
+        }else if (cursors.right.isDown) {
+            this.player.body.setVelocityX(160);
+
+            this.player.anims.play('right', true);
+
         }else {
             this.player.body.setVelocityX(0);
-
-            this.player.anims.stop('left', true);
+            this.player.anims.play('pause', true);
         }
     }
 }
