@@ -26,8 +26,7 @@ class Level_1 extends Phaser.Scene {
                 zeroPad: 3,
                 start: 0,
                 end: 29
-            }),
-            repeat: -1
+            })
         });
 
         this.anims.create({
@@ -53,8 +52,7 @@ class Level_1 extends Phaser.Scene {
                 zeroPad: 3,
                 start: 30,
                 end: 59
-            }),
-            repeat: -1
+            })
         });
 
         this.anims.create({
@@ -110,10 +108,7 @@ class Level_1 extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
 
         this.physics.add.collider(this.player, this.ground)
-        this.physics.world.on('collisionstart', function (event, bodyA, bodyB) {
-            console.log(event, bodyA, bodyB)
-            // var pairs = event.pairs;
-        });
+         
 // SPACESHIP
 
         // this.player.play('left');
@@ -136,6 +131,7 @@ class Level_1 extends Phaser.Scene {
 
     update() {
         
+        
         if(this.spaceship__container.body.velocity.x > 0){
             this.mainSpaceship.setScale(-1,1)
             this.power.setScale(-1,1);
@@ -151,21 +147,26 @@ class Level_1 extends Phaser.Scene {
 
         
 
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown ) {
             this.player.body.setVelocityX(-200);
 
-            this.player.anims.play('left', true);
+            if( !this.isJump){
+                this.player.anims.play('left', true);
+               }
         }else if (this.cursors.right.isDown) {
             this.player.body.setVelocityX(200);
-
-            this.player.anims.play('right', true);
-
-        }else {
-            this.player.body.setVelocityX(0);
-            if(!this.isJump){
+           if( !this.isJump){
+             this.player.anims.play('right', true);
+            }
+        }else if(!this.isJump){
+                this.player.body.setVelocityX(0);
                 this._stopAnimation(this.player.anims);
             }
-        }
+            if(this.player.body.velocity.y > 0 && this.player.body.position.y > 610){
+                console.log(this.player.body.position.y)
+                this.isJump = false
+            }
+       
 
 // console.log( this.player.body.position.y,this.player.anims.currentAnim)
 //         if(this.isJump && this.player.body.position.y === 620){
