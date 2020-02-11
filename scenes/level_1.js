@@ -8,6 +8,7 @@ class Level_1 extends Phaser.Scene {
     preload() {
         this.load.image('ground', 'images/ground.png');
         this.load.image('physic_player', 'images/player/player_hitbox.png');
+        this.load.image('gun', 'images/player/gun.png');
         // this.load.atlas('player', 'images/player/player.png', 'images/player/player.json');
         this.load.multiatlas('player', 'images/player/player.json', 'images/player');
         this.load.atlas('spaceship', 'images/space.png', 'images/space.json');
@@ -100,15 +101,20 @@ class Level_1 extends Phaser.Scene {
         this.ground.setCollision([0], true);
 
 // PLAYER
-        this.player = this.physics.add.sprite(500, config.height / 2, 'player', 0).setSize(95, 145)
-        .setOffset(135, 35)       ;
-        
-        this.player.setScale(.8);
-        this.player.setGravityY(300);
-        this.player.setCollideWorldBounds(true);
+        this.player = this.add.sprite(0,10, 'player')
+        this.player.setScale(.776);
 
-        this.physics.add.collider(this.player, this.ground)
-         
+        this.gun = this.add.sprite(0,2,'gun');
+        this.gun.setOrigin(0.5).setScale(0.51)
+
+        this.player__container = this.add.container(500, config.height / 2,[this.player,this.gun]);
+        this.physics.world.enable(this.player__container);
+        this.player__container.body.setGravityY(300).setSize(1,75);
+        this.player__container.body.setCollideWorldBounds(true);
+
+        this.physics.add.collider(this.player__container, this.ground);
+
+
 // SPACESHIP
 
         // this.player.play('left');
@@ -121,16 +127,29 @@ class Level_1 extends Phaser.Scene {
         this.physics.world.enable(this.spaceship__container);
         this.spaceship__container.body.setVelocityX(-300).setBounce(1,1).setCollideWorldBounds(true).setSize(64, 32);
       
+//CURSOR
+
+        this.input.setDefaultCursor('url(images/player/scope.cur), pointer');
+
 // INPUT
         this.cursors = this.input.keyboard.createCursorKeys();
         this.spacebar = this.input.keyboard.addKey('SPACE');
         this.spacebar.on('down',this._startJump,this);
         this.spacebar.on('up',this._endJump,this);
         // this.input.on('space', this._jump,this)
+
+        this.input.on('pointermove', function (pointer) {
+            const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, pointer);
+            console.log(angle)
+            this.gun.setRotation(angle)
+            // Phaser.Geom.Line.SetToAngle(line, cannon.x, cannon.y, angle, 128);
+            // gfx.clear().strokeLineShape(line);
+        }, this);
+
     }
 
     update() {
-        
+    
         
         if(this.spaceship__container.body.velocity.x > 0){
             this.mainSpaceship.setScale(-1,1)
@@ -144,26 +163,24 @@ class Level_1 extends Phaser.Scene {
             this.power.x = 79;
 
         }
-
         
 
         if (this.cursors.left.isDown ) {
-            this.player.body.setVelocityX(-200);
+            this.player__container.body.setVelocityX(-200);
 
             if( !this.isJump){
                 this.player.anims.play('left', true);
                }
         }else if (this.cursors.right.isDown) {
-            this.player.body.setVelocityX(200);
+            this.player__container.body.setVelocityX(200);
            if( !this.isJump){
              this.player.anims.play('right', true);
             }
         }else if(!this.isJump){
-                this.player.body.setVelocityX(0);
+            this.player__container.body.setVelocityX(0);
                 this._stopAnimation(this.player.anims);
             }
-            if(this.player.body.velocity.y > 0 && this.player.body.position.y > 610){
-                console.log(this.player.body.position.y)
+            if( this.player__container.body.velocity.y > 0 &&  this.player__container.body.position.y > 610){
                 this.isJump = false
             }
        
@@ -204,10 +221,10 @@ class Level_1 extends Phaser.Scene {
 
     _endJump(){
         this.timer.remove();
-        if(this.player.body.velocity.y === 0){
+        if( this.player__container.body.velocity.y === 0){
             this.isJump = true;
             this.player.anims.play('jump', true);
-            function playerJump (){this.player.body.setVelocityY(-this.jumpPower*200);this.jumpPower = 0;}
+            function playerJump (){ this.player__container.body.setVelocityY(-this.jumpPower*200);this.jumpPower = 0;}
             this.time.delayedCall(120,playerJump,['salut'],this);
         }else{
             this.jumpPower = 0;
