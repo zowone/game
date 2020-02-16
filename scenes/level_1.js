@@ -16,24 +16,26 @@ class Level_1 extends Phaser.Scene {
         this.load.multiatlas('player', 'images/player/player.json', 'images/player');
         this.load.atlas('spaceship', 'images/space.png', 'images/space.json');
         this.load.atlas('power', 'images/power.png', 'images/power.json');
+        this.load.atlas('bullet_dust', 'images/dust/bullet_dust.png', 'images/dust/bullet_dust.json');
 
     }
 
     create() {
         const Bullet = new Phaser.Class({
 
-            Extends: Phaser.GameObjects.Image,
+            Extends: Phaser.GameObjects.Sprite,
         
             initialize:
         
                 function Bullet(scene) {
-                    Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+                    Phaser.GameObjects.Sprite.call(this, scene, 0, 0, 'bullet');
         
                     this.speed = Phaser.Math.GetSpeed(600, 1);
                 },
         
             fire: function (x, y, angle,ctx) {
                 this.angle = angle;
+                this.ctx = ctx
                 this.setPosition(x, y);
                 this.setRotation(angle)
                 this.setActive(true);
@@ -52,9 +54,16 @@ class Level_1 extends Phaser.Scene {
                   }, this);
             },
         update(time,delta){
-           if(!this.body.blocked.none){
-            this.destroy();
-           }      
+            
+            if(this.body.onFloor()){
+                this.anims.play('bulletDust',true)
+                this.on('animationcomplete', function () {
+                    this.destroy();
+                  }, this);  
+            }else  if(!this.body.blocked.none){
+                this.destroy();
+            }  
+              
         }
 
         
@@ -134,6 +143,19 @@ class Level_1 extends Phaser.Scene {
             }),
             repeat: -1
         })
+
+        this.anims.create({
+            key: 'bulletDust',
+            frameRate: 30,
+            frames: this.anims.generateFrameNames('bullet_dust', {
+                prefix: 'bullet_dust_',
+                suffix: '.png',
+                zeroPad: 3,
+                start: 0,
+                end: 4,
+            }),
+        })
+
         // LEVEL
         const level = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
         const map = this.make.tilemap({ data: level, tileWidth: 32, tileHeight: 32 });
@@ -207,18 +229,6 @@ class Level_1 extends Phaser.Scene {
             this.power.setScale(1, 1);
             this.power.x = 79;
 
-        }
-        //FIRE
-
-        if(!this.pointer.leftButtonReleased() && time > this.lastFired){
-            var bullet = this.bullets.get();
-            const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, this.pointer);
-            console.log(angle)
-            if (bullet) {
-               
-                bullet.fire(this.player__container.body.x, this.player__container.body.y,angle,this);
-                this.lastFired = time + 200;
-            }
         }
 
         // PLAYER CONTROL
@@ -301,6 +311,27 @@ class Level_1 extends Phaser.Scene {
             }
         }
 
+        //FIRE
+
+        if(!this.pointer.leftButtonReleased() && time > this.lastFired){
+            var bullet = this.bullets.get();
+            const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, this.pointer);
+            if (bullet) {
+                bullet.fire(this.player__container.body.x, this.player__container.body.y,angle,this);
+                this.lastFired = time + 200;
+            }
+            if( angle < 1.5 && angle >-1.5){
+                
+                this.player__container.body.setVelocityX(this.player__container.body.velocity.x -= 30)
+            }else{
+                this.player__container.body.setVelocityX(this.player__container.body.velocity.x += 30)
+            }
+            if( angle > 0){
+                if(this.player__container.body.y>this.cameras.main.centerY){
+                    this.player__container.body.setVelocityY(this.player__container.body.velocity.y -= 100)
+                }
+            }
+        }
 
     }
 
