@@ -13,7 +13,7 @@ var config = {
     scene: [Level_1],
     physics:{
         default:'arcade',
-        arcade:{debug:true}
+        // arcade:{debug:true}
     }
 };
 

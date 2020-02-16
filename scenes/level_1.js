@@ -1,15 +1,18 @@
+
+
 class Level_1 extends Phaser.Scene {
     constructor() {
         super('Level_1');
         this.isJump = false;
         this.jumpTimer = 0;
+        this.lastFired = 0;
     };
 
     preload() {
         this.load.image('ground', 'images/ground.png');
         this.load.image('physic_player', 'images/player/player_hitbox.png');
         this.load.image('gun', 'images/player/gun.png');
-        // this.load.atlas('player', 'images/player/player.png', 'images/player/player.json');
+        this.load.image('bullet', 'images/player/bullet.png');
         this.load.multiatlas('player', 'images/player/player.json', 'images/player');
         this.load.atlas('spaceship', 'images/space.png', 'images/space.json');
         this.load.atlas('power', 'images/power.png', 'images/power.json');
@@ -17,6 +20,45 @@ class Level_1 extends Phaser.Scene {
     }
 
     create() {
+        const Bullet = new Phaser.Class({
+
+            Extends: Phaser.GameObjects.Image,
+        
+            initialize:
+        
+                function Bullet(scene) {
+                    Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+        
+                    this.speed = Phaser.Math.GetSpeed(600, 1);
+                },
+        
+            fire: function (x, y, angle,ctx) {
+                this.angle = angle;
+                this.setPosition(x, y);
+                this.setRotation(angle)
+                this.setActive(true);
+                this.setVisible(true);
+                this.setScale(0.8)
+                ctx.physics.velocityFromRotation(angle, 600, this.body.velocity);
+                this.body.setCollideWorldBounds(true);
+                ctx.physics.add.collider(this, ctx.ground);
+                this.body.world.on('worldbounds', function(body) {
+                    // Check if the body's game object is the sprite you are listening for
+                    if (body.gameObject === this) {
+                      // Stop physics and render updates for this object
+                      this.setActive(false);
+                      this.setVisible(false);
+                    }
+                  }, this);
+            },
+        update(time,delta){
+           if(!this.body.blocked.none){
+            this.destroy();
+           }      
+        }
+
+        
+        });
 
         this.anims.create({
             key: 'left',
@@ -93,8 +135,7 @@ class Level_1 extends Phaser.Scene {
             repeat: -1
         })
         // LEVEL
-        // this.ground = this.physics.add.staticGroup();
-        const level = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+        const level = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
         const map = this.make.tilemap({ data: level, tileWidth: 32, tileHeight: 32 });
         const tiles = map.addTilesetImage('ground');
         this.ground = map.createStaticLayer(0, tiles, 0, config.height - 32);
@@ -114,10 +155,16 @@ class Level_1 extends Phaser.Scene {
 
         this.physics.add.collider(this.player__container, this.ground);
 
+        // BULLET
+
+        this.bullets = this.physics.add.group({
+            classType: Bullet,
+            maxSize: 15,
+            runChildUpdate: true
+        });
 
         // SPACESHIP
 
-        // this.player.play('left');
         this.mainSpaceship = this.add.sprite(32, 16, "spaceship", "spaceship.png");
         this.power = this.add.sprite(79, 21, "power");
         this.power.play('powerShip');
@@ -130,12 +177,6 @@ class Level_1 extends Phaser.Scene {
         //CURSOR
 
         this.input.setDefaultCursor('url(images/player/scope.cur), pointer');
-
-        // INPUT
-        this.cursors = this.input.keyboard.createCursorKeys();
-
-        this.keys = this.input.keyboard.addKeys('Q,D,SPACE');
-
         this.input.on('pointermove', function (pointer) {
             const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, pointer);
 
@@ -143,10 +184,19 @@ class Level_1 extends Phaser.Scene {
 
         }, this);
 
+      
+
+        // INPUT
+
+        this.pointer = this.input.activePointer;
+
+        this.keys = this.input.keyboard.addKeys('Q,D,SPACE');
+
+      
     }
 
-    update() {
-
+    update(time, delta) {
+        
 
         if (this.spaceship__container.body.velocity.x > 0) {
             this.mainSpaceship.setScale(-1, 1)
@@ -158,90 +208,99 @@ class Level_1 extends Phaser.Scene {
             this.power.x = 79;
 
         }
-    
-        // if (this.isJump) {
-        //     this.gun.y = 6;
-        // } else {
-        //     this.gun.y = 2;
-        // }
+        //FIRE
 
+        if(!this.pointer.leftButtonReleased() && time > this.lastFired){
+            var bullet = this.bullets.get();
+            const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, this.pointer);
+            console.log(angle)
+            if (bullet) {
+               
+                bullet.fire(this.player__container.body.x, this.player__container.body.y,angle,this);
+                this.lastFired = time + 200;
+            }
+        }
 
-    if(this.player__container.body.onFloor()){
-        if (this.keys.Q.isDown) {
-            this.player__container.body.setVelocityX(-200);
-            this.player.anims.play('left', true);
-    
-        } else if (this.keys.D.isDown) {
-            this.player.anims.play('right', true);
-            this.player__container.body.setVelocityX(200);
+        // PLAYER CONTROL
+
+        if (this.player__container.body.onFloor()) {
+            if (this.keys.Q.isDown) {
+                this.player__container.body.setVelocityX(-200);
+                this.player.anims.play('left', true);
+
+            } else if (this.keys.D.isDown) {
+                this.player.anims.play('right', true);
+                this.player__container.body.setVelocityX(200);
+            } else {
+                this.player__container.body.setVelocityX(0);
+                this._stopAnimation(this.player.anims);
+            }
+            if (this.keys.SPACE.isUp) {
+                this.isJump = false
+                this.player.y = 10
+            }
+            if (this.keys.SPACE.isDown) {
+                this.isJump = true;
+                this.jumpToright = this.player__container.body.velocity.x > 0
+                this.jumptimer = 1;
+                this.player__container.body.velocity.y = -150;
+                this.player.anims.stop();
+
+            }
         } else {
-            this.player__container.body.setVelocityX(0);
-            this._stopAnimation(this.player.anims);
-        }
-        if (this.keys.SPACE.isUp) {
-            this.isJump = false
-            this.player.y = 10
-        }
-        if(this.keys.SPACE.isDown){
-            this.isJump = true;
-            this.jumptimer = 1;
-            this.player__container.body.velocity.y = -150;
-            this.player.anims.stop();
-           
-        }
-    }else{
-        if (this.keys.SPACE.isDown && (this.jumptimer != 0)) {
-         
-            if (this.jumptimer > 45) {
+            if (this.keys.SPACE.isDown && (this.jumptimer != 0)) {
+
+                if (this.jumptimer > 45) {
+                    this.jumptimer = 0;
+                    this.isJump = false
+                } else {
+                    this.jumptimer++
+                    this.player__container.body.velocity.y = -150 + this.jumptimer * 2;
+                }
+            } else if (this.jumptimer != 0) {
                 this.jumptimer = 0;
                 this.isJump = false
-            } else { 
-                this.jumptimer++
-                this.player__container.body.velocity.y = -150 + this.jumptimer*2;
             }
-        } else if (this.jumptimer != 0) {
-            this.jumptimer = 0;
-            this.isJump = false
+
+            if (this.keys.Q.isDown && this.jumpToright) {
+                this.player__container.body.velocity.x -= 4;
+
+
+            }
+            if (this.keys.D.isDown && !this.jumpToright) {
+
+                this.player__container.body.velocity.x += 4;
+            }
+
+            if (this.isJump) {
+                switch (this.jumptimer) {
+                    case 1:
+                        this.player.setFrame('player_067.png')
+                        this.player.y = 10;
+                        break;
+                    case 2:
+                        this.player.setFrame('player_068.png')
+                        this.player.y = 15;
+                        break;
+                    case 6:
+                        this.player.setFrame('player_069.png')
+                        this.player.y = 20;
+                        break;
+                    case 7:
+                        this.player.setFrame('player_070.png')
+                        this.player.y = 25;
+                        break;
+                    case 9:
+                        this.player.setFrame('player_071.png')
+                        this.player.y = 29;
+                        break;
+                }
+            } else {
+                this.player.setFrame('player_059.png')
+                this.player.y = 10
+            }
         }
 
-        if (this.keys.Q.isDown) {
-            this.player__container.body.setVelocityX(-200);
-           
-    
-        } else if (this.keys.D.isDown) {
-        
-            this.player__container.body.setVelocityX(200);
-        }
-
-        if(this.isJump){
-            switch (this.jumptimer) {
-                case 1 :
-                    this.player.setFrame('player_067.png')
-                    this.player.y = 10;
-                    break;
-                case 2 :
-                    this.player.setFrame('player_068.png')
-                    this.player.y = 15;
-                    break;
-                case 6 :
-                    this.player.setFrame('player_069.png')
-                    this.player.y = 20;
-                    break;
-                case 7 :
-                    this.player.setFrame('player_070.png')
-                    this.player.y = 25;
-                    break;
-                case 9 :
-                    this.player.setFrame('player_071.png')
-                    this.player.y = 29;
-                    break;
-            }
-        }else{
-            this.player.setFrame('player_059.png')
-            this.player.y = 10
-        }
-    }
-       
 
     }
 
