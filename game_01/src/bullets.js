@@ -8,9 +8,11 @@ const Bullet = new Phaser.Class({
             Phaser.GameObjects.Sprite.call(this, scene, 0, 0, 'bullet');
 
             this.speed = Phaser.Math.GetSpeed(700, 1);
+            // this.scene = scene
         },
 
     fire(x, y, angle, ctx) {
+        console.log('alo')
         this.angle = angle;
         this.ctx = ctx
         this.setPosition(x, y);
@@ -21,6 +23,10 @@ const Bullet = new Phaser.Class({
         ctx.physics.velocityFromRotation(angle, 600, this.body.velocity);
         this.body.setCollideWorldBounds(true);
         ctx.physics.add.collider(this, ctx.ground);
+        ctx.physics.add.collider(this, ctx.spaceship__container,(bullet,spaceship)=>{
+            this.explosed();
+            
+        });
         this.body.world.on('worldbounds', function (body) {
            
             if (body.gameObject === this) {
@@ -31,16 +37,20 @@ const Bullet = new Phaser.Class({
         }, this);
     },
     update(time, delta) {
-
         if (this.body.onFloor()) {
-            this.anims.play('bulletDust', true)
-            this.on('animationcomplete', function () {
-                this.destroy();
-            }, this);
+           this.explosed()
         } else if (!this.body.blocked.none) {
             this.destroy();
         }
 
+    },
+
+    explosed(){
+        this.body.setVelocity(0,0);
+        this.anims.play('bulletDust', true);
+        this.on('animationcomplete', ()=> {
+            this.destroy();
+        });
     }
 
 

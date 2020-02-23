@@ -143,7 +143,7 @@ export class Level_1 extends Phaser.Scene {
 
         this.player__container = this.add.container(500, configKeys.GAMEHEIGHT / 2, [this.player, this.gun]);
         this.physics.world.enable(this.player__container);
-        this.player__container.body.setGravityY(600).setSize(1, 78);
+        this.player__container.body.setGravityY(1000).setSize(1, 78);
         this.player__container.setDepth(2);  
         this.player__container.body.setCollideWorldBounds(true);
 
@@ -208,12 +208,12 @@ export class Level_1 extends Phaser.Scene {
 
         if (this.player__container.body.onFloor()) {
             if (this.keys.Q.isDown) {
-                this.player__container.body.setVelocityX(-200);
+                this.player__container.body.setVelocityX(-250);
                 this.player.anims.play('left', true);
 
             } else if (this.keys.D.isDown) {
                 this.player.anims.play('right', true);
-                this.player__container.body.setVelocityX(200);
+                this.player__container.body.setVelocityX(250);
             } else {
                 this.player__container.body.setVelocityX(0);
                 this._stopAnimation(this.player.anims);
@@ -224,9 +224,8 @@ export class Level_1 extends Phaser.Scene {
             }
             if (this.keys.SPACE.isDown) {
                 this.isJump = true;
-                this.jumpToright = this.player__container.body.velocity.x > 0
                 this.jumptimer = 1;
-                this.player__container.body.velocity.y = -150;
+                this.player__container.body.velocity.y = -300;
                 this.player.anims.stop();
 
             }
@@ -238,20 +237,17 @@ export class Level_1 extends Phaser.Scene {
                     this.isJump = false
                 } else {
                     this.jumptimer++
-                    this.player__container.body.velocity.y = -150 + this.jumptimer * 2;
+                    this.player__container.body.velocity.y = -300 + this.jumptimer * 2;
                 }
             } else if (this.jumptimer != 0) {
                 this.jumptimer = 0;
                 this.isJump = false
             }
 
-            if (this.keys.Q.isDown && this.jumpToright) {
+            if (this.keys.Q.isDown) {
                 this.player__container.body.velocity.x -= 4;
-
-
             }
-            if (this.keys.D.isDown && !this.jumpToright) {
-
+            if (this.keys.D.isDown) {
                 this.player__container.body.velocity.x += 4;
             }
 
@@ -301,7 +297,7 @@ export class Level_1 extends Phaser.Scene {
             }
             if( angle > 0){
                 if(this.player__container.body.y>this.cameras.main.centerY){
-                    this.player__container.body.setVelocityY(this.player__container.body.velocity.y -= 100)
+                    this.player__container.body.setVelocityY(this.player__container.body.velocity.y -= 300)
                 }
             }
         }
