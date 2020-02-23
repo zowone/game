@@ -281,14 +281,26 @@ export class Level_1 extends Phaser.Scene {
                 this.player__container.body.setVelocityX(this.player__container.body.velocity.x -= 30)
             }else{
                 this.player__container.body.setVelocityX(this.player__container.body.velocity.x += 30)
-            }
-            if( angle > 0){
+            } 
+            
+            if( angle > 1 && angle < 2){
                 if(this.player__container.body.y>this.cameras.main.centerY){
                     this.player__container.body.setVelocityY(this.player__container.body.velocity.y -= 300)
                 }
             }
         }
 
+
+        //limit velocity player
+
+        if(this.player__container.body.velocity.x > 300){
+            this.player__container.body.velocity.x = 300
+        }
+        if(this.player__container.body.velocity.x < -300){
+            this.player__container.body.velocity.x = -300
+        }
+
+        
     }
 
     _stopAnimation(animation) {

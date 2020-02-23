@@ -7,7 +7,7 @@ const Bullet = new Phaser.Class({
         function Bullet(scene) {
             Phaser.GameObjects.Sprite.call(this, scene, 0, 0, 'bullet');
 
-            this.speed = Phaser.Math.GetSpeed(700, 1);
+            this.speed = Phaser.Math.GetSpeed(600, 1);
             // this.scene = scene
         },
 
@@ -19,7 +19,7 @@ const Bullet = new Phaser.Class({
         this.setActive(true);
         this.setVisible(true);
         this.setScale(0.8)
-        ctx.physics.velocityFromRotation(angle, 600, this.body.velocity);
+        ctx.physics.velocityFromRotation(angle, 1000, this.body.velocity);
         this.body.setCollideWorldBounds(true);
         ctx.physics.add.collider(this, ctx.ground);
         ctx.physics.add.collider(this, ctx.spaceship__container,(bullet,spaceship)=>{
