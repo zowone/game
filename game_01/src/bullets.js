@@ -14,14 +14,13 @@ const Bullet = new Phaser.Class({
         },
 
     fire(x, y, angle, ctx) {
-       
         this.angle = angle;
         this.ctx = ctx
-        this.setPosition(x, y);
-        this.setRotation(angle)
-        this.setActive(true);
-        this.setVisible(true);
-        this.setScale(0.8)
+        this.setPosition(x +Math.cos(this.angle)*this.ctx.gun.width/2*this.ctx.gun.scale, y+ Math.sin(this.angle)*this.ctx.gun.width/2*this.ctx.gun.scale)
+        .setRotation(angle)
+        .setActive(true)
+        .setVisible(true)
+        .setScale(0.8);
         ctx.physics.velocityFromRotation(angle, 1000, this.body.velocity);
         this.collideGround = ctx.physics.add.collider(this, ctx.ground);
         this.collideSpace = ctx.physics.add.collider(this, ctx.spaceship__container,(bullet,spaceship)=>{

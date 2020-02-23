@@ -170,14 +170,6 @@ export class Level_1 extends Phaser.Scene {
         //CURSOR
 
         this.input.setDefaultCursor(`url(${cursor_sprite}), pointer`);
-        this.input.on('pointermove', function (pointer) {
-            const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, pointer);
-
-            this.gun.setRotation(angle)
-
-        }, this);
-
-      
 
         // INPUT
 
@@ -190,8 +182,9 @@ export class Level_1 extends Phaser.Scene {
 
     update(time, delta) {
         
-
         // PLAYER CONTROL
+
+        this.gun.setRotation(Phaser.Math.Angle.BetweenPoints(this.player__container, this.input))
 
         if (this.player__container.body.onFloor()) {
             if (this.keys.Q.isDown) {
