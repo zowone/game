@@ -10,15 +10,11 @@ var config = {
   physics: {
       default: 'arcade',
       arcade: {
-          gravity: { y: 1000 },
+        //   gravity: { y: 1000 },
           debug: false
       }
   },
-  scene: [Level_1],
-  physics:{
-      default:'arcade',
-      arcade:{debug:true}
-  }
+  scene: [Level_1]
 };
 
 var game = new Phaser.Game(config);

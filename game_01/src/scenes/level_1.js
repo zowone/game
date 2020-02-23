@@ -12,7 +12,8 @@ import bulletDust_sprite from '../assets/player/bullet_dust.png';
 import bulletDust_json from '../assets/player/bullet_dust.json';
 import cursor_sprite from '../public/scope.cur'
 
-import Bullet from '../bullets'
+import Bullet from '../bullets';
+import Spaceship__container from '../spaceship'
 
 import configKeys from '../config.json';
 
@@ -164,10 +165,7 @@ export class Level_1 extends Phaser.Scene {
         this.power = this.add.sprite(79, 21, "power");
         this.power.play('powerShip');
 
-        this.spaceship__container = this.add.container(configKeys.GAMEWIDTH, 100, [this.mainSpaceship, this.power]);
-
-        this.physics.world.enable(this.spaceship__container);
-        this.spaceship__container.body.setVelocityX(-300).setBounce(1, 1).setCollideWorldBounds(true).setSize(64, 32);
+        this.spaceship__container = new Spaceship__container(this,configKeys.GAMEWIDTH, 100, [this.mainSpaceship, this.power])
 
         //CURSOR
 
@@ -192,17 +190,6 @@ export class Level_1 extends Phaser.Scene {
 
     update(time, delta) {
         
-
-        if (this.spaceship__container.body.velocity.x > 0) {
-            this.mainSpaceship.setScale(-1, 1)
-            this.power.setScale(-1, 1);
-            this.power.x = -15;
-        } else {
-            this.mainSpaceship.setScale(1, 1);
-            this.power.setScale(1, 1);
-            this.power.x = 79;
-
-        }
 
         // PLAYER CONTROL
 

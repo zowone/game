@@ -12,7 +12,6 @@ const Bullet = new Phaser.Class({
         },
 
     fire(x, y, angle, ctx) {
-        console.log('alo')
         this.angle = angle;
         this.ctx = ctx
         this.setPosition(x, y);
@@ -25,7 +24,7 @@ const Bullet = new Phaser.Class({
         ctx.physics.add.collider(this, ctx.ground);
         ctx.physics.add.collider(this, ctx.spaceship__container,(bullet,spaceship)=>{
             this.explosed();
-            
+            spaceship.explosed();
         });
         this.body.world.on('worldbounds', function (body) {
            
