@@ -15,29 +15,25 @@ export default class Spaceship02__container extends Phaser.GameObjects.Container
     // ...
     preUpdate(time) {
         if (this.isDown) {
-            this.body.velocity.y = 100
+            this.body.velocity.y = 100;
         } else {
-            this.body.velocity.y = -100
+            this.body.velocity.y = -100;
         }
         if (this.body.y > this.positionStartY + 100) {
-            this.isDown = false
+            this.isDown = false;
         }
         if (this.body.y < this.positionStartY) {
-            this.isDown = true
+            this.isDown = true;
         }
-        
         if ( Math.abs(this.body.x - this.scene.player__container.body.x) < 100 && this.deltaFire < time ){
-            console.log('boom');
-            // const bullet1 = new EnnemyBullet(this.scene,'laser_sprite');
             const bullet1 = this.bullets.get();
             const bullet2 = this.bullets.get();
             const bullet3 = this.bullets.get();
             if(bullet1 && bullet2 && bullet3){
-                bullet1.fire(this.body.x,this.body.y,0);
-                bullet2.fire(this.body.x,this.body.y,-.3);
-                bullet3.fire(this.body.x,this.body.y,.3);
+                bullet1.fire(this.body.x+this.body.sourceWidth/2,this.body.y+this.body.sourceHeight,0);
+                bullet2.fire(this.body.x+this.body.sourceWidth/2+30,this.body.y+this.body.sourceHeight,-.3);
+                bullet3.fire(this.body.x+this.body.sourceWidth/2-30,this.body.y+this.body.sourceHeight,.3);
             }
-        
             this.deltaFire = time + 1000;
         }
     }

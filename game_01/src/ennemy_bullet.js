@@ -25,11 +25,33 @@ export default class EnnemyBullet extends Phaser.GameObjects.Sprite {
 
         this.scene.physics.velocityFromRotation(Math.PI / 2 + angle, this.speed, this.body.velocity);
         this.collideGround = this.scene.physics.add.collider(this, this.scene.ground);
-        this.collideSpace = this.scene.physics.add.collider(this, this.scene.player__container, (bullet, player) => {
+        console.log(this.scene.playerHitBox)
+        this.collideSpace = this.scene.physics.add.collider(this, this.scene.playerHitBox, (bullet, player) => {
+          
             bullet.explosed();
             // player.hit();
 
         });
+        // this.scene.physics.add.overlap(
+        //     this.bullet,
+        //     balls,
+        //     function overlap(_logo, ball) {
+        //       ball.setFrame(5).disableBody();
+        //     },
+        //     function process(_logo, ball) {
+        //       // It would be more efficient to create a CanvasTexture and check that instead.
+        //       // But getPixelAlpha() is convenient for an example.
+        
+        //       return (
+        //         this.textures.getPixelAlpha(
+        //           Math.floor(ball.body.center.x - logoTopLeft.x),
+        //           Math.floor(ball.body.center.y - logoTopLeft.y),
+        //           "logo"
+        //         ) === 255
+        //       );
+        //     },
+        //     this
+        //   );
         // this.body.world.on('worldbounds', function (body) {
 
         //     if (body.gameObject === this) {

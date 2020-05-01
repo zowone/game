@@ -158,15 +158,20 @@ export class Level_1 extends Phaser.Scene {
         this.ground.setCollision([0], true);
 
         // PLAYER
-        this.player = this.add.sprite(0, 10, 'player')
+        this.player = this.add.sprite(0, 10, 'player');
         this.player.setScale(.776);
 
         this.gun = this.add.sprite(0, 2, 'gun');
-        this.gun.setOrigin(0.5).setScale(0.51)
+        this.gun.setOrigin(0.5).setScale(0.51);
 
-        this.player__container = this.add.container(500, configKeys.GAMEHEIGHT / 2, [this.player, this.gun]);
+        this.playerHitBox = this.add.sprite(0,25,'physic_player');
+        this.playerHitBox.setScale(.776);
+        this.playerHitBox.setAlpha(0);
+
+        this.player__container = this.add.container(500, configKeys.GAMEHEIGHT / 2, [this.player, this.gun, this.playerHitBox]);
+        this.physics.world.enable(this.playerHitBox);
         this.physics.world.enable(this.player__container);
-        this.player__container.body.setGravityY(1000).setSize(1, 78);
+        this.player__container.body.setGravityY(1000).setSize(0, 78);
         this.player__container.setDepth(2);  
         this.player__container.body.setCollideWorldBounds(true);
 
@@ -309,7 +314,7 @@ export class Level_1 extends Phaser.Scene {
             var bullet = this.bullets.get();
             const angle = Phaser.Math.Angle.BetweenPoints(this.player__container, this.pointer);
             if (bullet) {
-                bullet.fire(this.player__container.body.x, this.player__container.body.y,angle,this);
+                bullet.fire(this.player__container.body.x + this.player__container.body.sourceWidth/2, this.player__container.body.y,angle,this);
                 this.lastFired = time + 200;
             }
             if( angle < 1.5 && angle >-1.5){
@@ -330,7 +335,7 @@ export class Level_1 extends Phaser.Scene {
         //limit velocity player
 
         if(this.player__container.body.velocity.x > 300){
-            this.player__container.body.velocity.x = 300
+            this.player__container.body.velocity.x = 300;
         }
         if(this.player__container.body.velocity.x < -300){
             this.player__container.body.velocity.x = -300
