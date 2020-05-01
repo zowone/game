@@ -21,7 +21,6 @@ export default class Spaceship__container extends Phaser.GameObjects.Container {
     }
 
     explosed() {
-        console.log('badabooom');
         this.body.setVelocity(0, 0)
         this.power.destroy()
         this.spaceship.play('bulletDust', true);

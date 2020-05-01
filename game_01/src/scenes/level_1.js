@@ -6,14 +6,21 @@ import player_json from '../assets/player/player.json';
 import player_sprite from '../assets/player/player.png';
 import spaceship_sprite from '../assets/enemies/spaceship_01/space.png';
 import spaceship_json from '../assets/enemies/spaceship_01/space.json';
+import spaceship_02_sprite from '../assets/enemies/spaceship_02/spaceship_02.png';
+import spaceship_02_json from '../assets/enemies/spaceship_02/spaceship_02.json';
 import power_sprite from '../assets/enemies/spaceship_01/power.png';
 import power_json from '../assets/enemies/spaceship_01/power.json';
 import bulletDust_sprite from '../assets/player/bullet_dust.png';
 import bulletDust_json from '../assets/player/bullet_dust.json';
-import cursor_sprite from '../public/scope.cur'
+import laser_sprite from '../assets/enemies/laser_gun.png'
+import cursor_sprite from '../public/scope.cur';
+
 
 import Bullet from '../bullets';
-import Spaceship__container from '../spaceship'
+import Spaceship__container from '../spaceship';
+import Spaceship02__container from '../spaceship_02';
+
+import EnnemyBullet from '../ennemy_bullet';
 
 import configKeys from '../config.json';
 
@@ -31,11 +38,12 @@ export class Level_1 extends Phaser.Scene {
         this.load.image('physic_player', physicPlayer_sprite);
         this.load.image('gun', gun_sprite);
         this.load.image('bullet', bullet_sprite);
+        this.load.image('laser_sprite', laser_sprite);
         this.load.atlas('player',player_sprite ,player_json );
         this.load.atlas('spaceship', spaceship_sprite, spaceship_json);
         this.load.atlas('power', power_sprite, power_json);
         this.load.atlas('bullet_dust', bulletDust_sprite, bulletDust_json);
-
+        this.load.atlas('spaceship_02', spaceship_02_sprite, spaceship_02_json);
     }
 
     create() {
@@ -114,7 +122,21 @@ export class Level_1 extends Phaser.Scene {
                 end: 3,
             }),
             repeat: -1
-        })
+        });
+
+        this.anims.create({
+            key: 'spaceship_02_beacon',
+            frameRate: 10,
+            frames: this.anims.generateFrameNames('spaceship_02', {
+                prefix: 'beacon_',
+                suffix: '.png',
+                zeroPad: 2,
+                start: 0,
+                end: 4,
+                frames: [0, 1, 2, 3, 4, 3, 2, 1]
+            }),
+            repeat: -1
+        });
 
         this.anims.create({
             key: 'bulletDust',
@@ -159,6 +181,12 @@ export class Level_1 extends Phaser.Scene {
             runChildUpdate: true
         });
 
+        this.ennemyBullets = this.physics.add.group({
+            classType: EnnemyBullet,
+            maxSize: 15,
+            runChildUpdate: true
+        });
+
         // SPACESHIP
 
         this.mainSpaceship = this.add.sprite(32, 16, "spaceship", "spaceship.png");
@@ -167,6 +195,21 @@ export class Level_1 extends Phaser.Scene {
 
         this.spaceship__container = new Spaceship__container(this,configKeys.GAMEWIDTH, 100, [this.mainSpaceship, this.power])
 
+
+        // SPACESHIP_02
+
+        this.mainSpaceship02 = this.add.sprite(75, 35, "spaceship_02", "ovni.png");
+        this.mainSpaceship02.setScale(0.75)
+        this.mainSpaceship02_beacon = this.add.sprite(75,-13,"spaceship_02","beacon_00.png");
+        this.mainSpaceship02_beacon.setScale(0.75);
+        this.mainSpaceship02_beacon.play('spaceship_02_beacon');
+        this.mainSpaceship02_laser = this.add.sprite(75,80,"spaceship_02","laser_gun.png");
+        this.mainSpaceship02_laser.setScale(0.75);
+        this.mainSpaceship02_laserLeft = this.add.sprite(50,80,"spaceship_02","laser_gun.png");
+        this.mainSpaceship02_laserLeft.setScale(0.75).setAngle(20);
+        this.mainSpaceship02_laserRight = this.add.sprite(100,80,"spaceship_02","laser_gun.png");
+        this.mainSpaceship02_laserRight.setScale(0.75).setAngle(340);
+        this.spaceship02__container = new Spaceship02__container(this,-configKeys.GAMEWIDTH-300, 100, [this.mainSpaceship02_laser,this.mainSpaceship02_laserLeft,this.mainSpaceship02_laserRight,this.mainSpaceship02, this.mainSpaceship02_beacon],this.ennemyBullets)
         //CURSOR
 
         this.input.setDefaultCursor(`url(${cursor_sprite}), pointer`);
